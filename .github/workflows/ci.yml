@@ -1,0 +1,40 @@
+name: LinkShort CI Workflow
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/banner@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: |
+            url-shortener/server/package.json
+            url-shortener/client/package.json
+
+      - name: Install Backend Dependencies & Run Tests
+        working-directory: ./url-shortener/server
+        run: |
+          npm ci
+          npm test
+
+      - name: Install Frontend Dependencies & Build
+        working-directory: ./url-shortener/client
+        run: |
+          npm ci
+          npm run build

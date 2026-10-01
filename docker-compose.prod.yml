@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: linkshort-prod-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-linkshort_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-linkshort_password}
+      POSTGRES_DB: ${DB_NAME:-linkshort_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-linkshort_user} -d ${DB_NAME:-linkshort_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: linkshort-prod-backend
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      PORT: 5001
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${DB_USER:-linkshort_user}:${DB_PASSWORD:-linkshort_password}@postgres:5432/${DB_NAME:-linkshort_db}
+      JWT_SECRET: ${JWT_SECRET:-production_super_secret_key_change_me}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:5001}
+      CLIENT_ORIGIN: ${CLIENT_ORIGIN:-http://localhost:80}
+      COOKIE_SECRET: ${COOKIE_SECRET:-prod_cookie_secret_change_me}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        # Change this to your public backend URL or IP when building for real servers
+        - VITE_API_BASE_URL=${APP_BASE_URL:-http://localhost:5001}/api
+    container_name: linkshort-prod-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_prod_data:

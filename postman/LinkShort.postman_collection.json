@@ -1,0 +1,259 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-5678-90ef-1234-567890abcdef",
+		"name": "LinkShort REST API",
+		"description": "Complete Postman collection for testing LinkShort URL Shortener endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "shortCode",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "urlId",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "health"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "User Registration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Password123!\",\n  \"confirmPassword\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Get Current User Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "me"]
+						}
+					}
+				},
+				{
+					"name": "User Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/logout",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "logout"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "URL Shortener",
+			"item": [
+				{
+					"name": "Create Shortened URL",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"originalUrl\": \"https://react.dev\",\n  \"title\": \"React Official Docs\",\n  \"customAlias\": \"react-docs-alias\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/urls",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "urls"]
+						}
+					}
+				},
+				{
+					"name": "List User URLs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/urls?page=1&limit=10&sortBy=created_at&order=DESC",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "urls"],
+							"query": [
+								{ "key": "page", "value": "1" },
+								{ "key": "limit", "value": "10" },
+								{ "key": "sortBy", "value": "created_at" },
+								{ "key": "order", "value": "DESC" }
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Single URL by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/urls/{{urlId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "urls", "{{urlId}}"]
+						}
+					}
+				},
+				{
+					"name": "Update URL Title or Alias",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated React Docs Title\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/urls/{{urlId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "urls", "{{urlId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete Short URL",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/urls/{{urlId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "urls", "{{urlId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Analytics",
+			"item": [
+				{
+					"name": "Overview Analytics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/overview",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "analytics", "overview"]
+						}
+					}
+				},
+				{
+					"name": "Link Detailed Analytics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/urls/{{urlId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "analytics", "urls", "{{urlId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Redirection",
+			"item": [
+				{
+					"name": "Redirect Short URL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{shortCode}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["{{shortCode}}"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

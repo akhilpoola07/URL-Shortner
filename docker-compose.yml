@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: linkshort-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: linkshort_user
+      POSTGRES_PASSWORD: linkshort_password
+      POSTGRES_DB: linkshort_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U linkshort_user -d linkshort_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
