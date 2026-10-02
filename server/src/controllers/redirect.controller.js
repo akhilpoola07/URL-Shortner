@@ -37,7 +37,7 @@ class RedirectController {
                         <div class="card">
                             <h1>404</h1>
                             <p>The shortened link you opened does not exist or may have been deleted.</p>
-                            <a href="${process.env.CLIENT_ORIGIN || 'http://localhost:5173'}">Go to Home Page</a>
+                            <a href="${process.env.CLIENT_ORIGIN || process.env.APP_BASE_URL || '/'}">Go to Home Page</a>
                         </div>
                     </body>
                     </html>

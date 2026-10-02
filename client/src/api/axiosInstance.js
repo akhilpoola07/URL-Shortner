@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+/**
+ * API base URL:
+ * - Development: set VITE_API_BASE_URL=http://localhost:5000/api in client/.env
+ *   (or use /api and rely on the Vite proxy in vite.config.js)
+ * - Production (Railway single service): defaults to /api on the same domain
+ */
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 const axiosInstance = axios.create({

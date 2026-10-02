@@ -170,8 +170,15 @@ erDiagram
 3. **Setup Frontend Environment**:
    ```bash
    cd ../client
+   cp .env.example .env
    npm install
    ```
+
+Or from the repository root:
+
+```bash
+npm run install:all
+```
 
 ---
 
@@ -240,9 +247,24 @@ Import the Postman collection to test API routes:
 
 ## 🚀 Deployment Instructions
 
-The project includes production-ready Dockerfiles and a `docker-compose.prod.yml` for easy hosting on any VPS. Alternatively, you can easily host this on platforms like Vercel and Render.
+**Recommended: deploy as ONE Railway web service** (Express serves the React build) plus a Railway PostgreSQL database.
 
-Read the step-by-step [Deployment Guide](./docs/DEPLOYMENT.md) for full instructions.
+```
+https://YOUR-RAILWAY-DOMAIN/          → React frontend
+https://YOUR-RAILWAY-DOMAIN/api/...   → REST API
+https://YOUR-RAILWAY-DOMAIN/abc123    → Short URL redirect
+```
+
+Root scripts used by Railway:
+
+```bash
+npm run build   # installs deps + builds client/dist + installs server deps
+npm start       # starts Express (serves API + React + redirects)
+```
+
+Follow the beginner-friendly step-by-step guide: **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)**.
+
+Docker Compose files remain available for local/VPS use, but are not required for Railway.
 
 ---
 

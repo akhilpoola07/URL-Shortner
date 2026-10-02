@@ -1,0 +1,17 @@
+{
+  "name": "linkshort",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LinkShort URL Shortener — React frontend served by Express API",
+  "scripts": {
+    "build": "npm install --prefix client && VITE_API_BASE_URL=/api npm run build --prefix client && npm install --prefix server --omit=dev",
+    "start": "node server/src/server.js",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "test": "npm test --prefix server",
+    "install:all": "npm install --prefix server && npm install --prefix client"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

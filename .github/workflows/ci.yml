@@ -19,22 +19,28 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/banner@v4
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
           cache-dependency-path: |
-            url-shortener/server/package.json
-            url-shortener/client/package.json
+            server/package-lock.json
+            client/package-lock.json
 
       - name: Install Backend Dependencies & Run Tests
-        working-directory: ./url-shortener/server
+        working-directory: ./server
         run: |
           npm ci
           npm test
 
       - name: Install Frontend Dependencies & Build
-        working-directory: ./url-shortener/client
+        working-directory: ./client
+        env:
+          VITE_API_BASE_URL: /api
         run: |
           npm ci
           npm run build
+
+      - name: Verify Root Production Build Script
+        run: |
+          node -e "const p=require('./package.json'); if(!p.scripts.build||!p.scripts.start) process.exit(1)"

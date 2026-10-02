@@ -1,7 +1,6 @@
 const AnalyticsService = require('../services/analytics.service');
 const { sendSuccess } = require('../utils/responseHandler');
-
-const getBaseUrl = () => process.env.APP_BASE_URL || 'http://localhost:5000';
+const { getBaseUrl } = require('../config/appUrl');
 
 class AnalyticsController {
     static async getUrlAnalytics(req, res, next) {

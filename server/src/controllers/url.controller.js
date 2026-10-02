@@ -1,7 +1,6 @@
 const UrlService = require('../services/url.service');
 const { sendSuccess, sendError } = require('../utils/responseHandler');
-
-const getBaseUrl = () => process.env.APP_BASE_URL || 'http://localhost:5000';
+const { getBaseUrl } = require('../config/appUrl');
 
 class UrlController {
     static async createUrl(req, res, next) {

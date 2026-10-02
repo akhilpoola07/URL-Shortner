@@ -2,10 +2,11 @@ const AuthService = require('../services/auth.service');
 const { sendSuccess, sendError } = require('../utils/responseHandler');
 const jwtConfig = require('../config/jwt');
 
+// Same-origin in production (Express serves React), so SameSite=Lax is correct
 const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    sameSite: 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
 

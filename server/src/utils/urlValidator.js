@@ -17,7 +17,8 @@ const RESERVED_ALIASES = new Set([
     'admin',
     'root',
     'public',
-    'index'
+    'index',
+    '404',
 ]);
 
 /**
